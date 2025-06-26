@@ -16,30 +16,30 @@ function App() {
     setIsLoggedIn(true);
   };
 
+  const handleRegisterSuccess = () => {
+    setShowRegister(false); // Show login form after registration
+  };
+
   return (
-    <div>
-      <h1>EduAI Platform</h1>
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-100 px-4 py-6">
+      <h1 className="text-4xl md:text-5xl font-extrabold text-center text-blue-700 drop-shadow-sm tracking-wide mb-10">
+        EduAI Platform
+      </h1>
 
       {!isLoggedIn ? (
-        <>
+        <div className="max-w-lg mx-auto">
           {showRegister ? (
             <>
-              <Register onRegisterSuccess={() => setShowRegister(false)} />
-              <p>
-                Already registered?{" "}
-                <button onClick={() => setShowRegister(false)}>Login</button>
-              </p>
+              <Register onRegisterSuccess={handleRegisterSuccess} />
+            
             </>
           ) : (
             <>
-              <Login onLogin={handleLogin} />
-              <p>
-                New student?{" "}
-                <button onClick={() => setShowRegister(true)}>Register</button>
-              </p>
+              <Login onLogin={handleLogin} toggleForm={() => setShowRegister(true)} />
+              {/* Optional: Add text below login if needed */}
             </>
           )}
-        </>
+        </div>
       ) : role === "admin" ? (
         <AdminDashboard />
       ) : (
