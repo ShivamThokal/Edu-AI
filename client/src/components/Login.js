@@ -11,7 +11,7 @@ function Login({ onLogin, toggleForm }) {
       const res = await axios.post("/api/auth/login", { username, password });
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
-      onLogin();
+      onLogin(res.data.role);
     } catch (err) {
       alert("Login failed: " + err.response?.data?.message || err.message);
     }

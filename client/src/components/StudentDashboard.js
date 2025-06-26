@@ -19,7 +19,7 @@ function StudentDashboard() {
     <div className="max-w-4xl mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold">Welcome Student!</h2>
-        <button onClick={handleLogout} className="text-red-600 underline">Logout</button>
+        <button onClick={handleLogout} >Logout</button>
       </div>
 
       <h3 className="text-lg font-semibold mb-4">Available Topics</h3>
