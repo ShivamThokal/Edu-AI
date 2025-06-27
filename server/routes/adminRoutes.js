@@ -6,21 +6,13 @@ const upload = require("../middleware/upload");
 const Topic = require("../models/Topic");
 const path = require("path");
 
+const createTopic = require('../Controllers/Topic');
+
 router.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
-// CREATE Topic with optional files
-router.post("/topics", auth(["admin"]), upload.fields([
-  { name: "image", maxCount: 1 },
-  { name: "pdf", maxCount: 1 }
-]), async (req, res) => {
-  const { level, subject, title } = req.body;
-  const imageUrl = req.files.image?.[0].filename;
-  const pdfUrl = req.files.pdf?.[0].filename;
 
-  const topic = new Topic({ level, subject, title, imageUrl, pdfUrl });
-  await topic.save();
-  res.json({ message: "Topic added", topic });
-});
+// CREATE Topic with optional files
+router.post("/addTopic", createTopic);
 
 // READ Topics
 router.get("/topics", async (req, res) => {
