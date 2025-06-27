@@ -1,165 +1,135 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import LogoutButton from "./LogoutButton";
+import React, { useState } from 'react';
+import LogoutButton from './LogoutButton'
 
-function AdminDashboard() {
-  const [topics, setTopics] = useState([]);
-  const [form, setForm] = useState({
-    level: "",
-    subject: "",
-    title: "",
-    image: null,
-    pdf: null,
+const AdminDashboard = () => {
+  const [formData, setFormData] = useState({
+    title: '',
+    level: '',
+    subject: ''
   });
-
-  const token = localStorage.getItem("token");
-
-  const fetchTopics = async () => {
-    const res = await axios.get("/api/admin/topics");
-    setTopics(res.data);
-  };
-
-  useEffect(() => {
-    fetchTopics();
-  }, []);
-
-  const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
-    if (files) {
-      setForm({ ...form, [name]: files[0] });
-    } else {
-      setForm({ ...form, [name]: value });
-    }
-  };
+  const [image, setImage] = useState(null);
+  const [pdf, setPdf] = useState(null);
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("level", form.level);
-    formData.append("subject", form.subject);
-    formData.append("title", form.title);
-    if (form.image) formData.append("image", form.image);
-    if (form.pdf) formData.append("pdf", form.pdf);
 
-    await axios.post("/api/admin/topics", formData, {
-      headers: {
-        Authorization: token,
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    setForm({ level: "", subject: "", title: "", image: null, pdf: null });
-    fetchTopics();
-  };
+    if (!image || !pdf) {
+      setMessage("❌ Please upload both an image and a PDF.");
+      return;
+    }
 
-  const handleDelete = async (id) => {
-    await axios.delete(`/api/admin/topics/${id}`, {
-      headers: { Authorization: token },
-    });
-    fetchTopics();
+    const form = new FormData();
+    form.append('title', formData.title);
+    form.append('level', formData.level);
+    form.append('subject', formData.subject);
+    form.append('image', image);
+    form.append('pdf', pdf);
+
+    try {
+      setLoading(true);
+      const response = await fetch('http://localhost:5000/api/admin/addTopic', {
+        method: 'POST',
+        body: form
+      });
+
+      const data = await response.json();
+
+      if (response) {
+        setMessage('✅ Topic created successfully!');
+        setFormData({ title: '', level: '', subject: '' });
+        setImage(null);
+        setPdf(null);
+      } else {
+        setMessage(`❌ ${data.message}`);
+      }
+    } catch (error) {
+      console.error(error);
+      setMessage('❌ Something went wrong.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-800">
-          Admin Dashboard – Manage Topics
-        </h2>
-        <LogoutButton />
-      </div>
+    <div className="max-w-xl mx-auto bg-white shadow-md rounded-2xl p-8 mt-10 border border-gray-200">
+      <h2 className="text-2xl font-semibold text-center text-blue-600 mb-6">Add New Topic</h2>
+      <LogoutButton/>
 
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-lg shadow-md space-y-4 max-w-xl mx-auto mb-10"
-      >
-        <input
-          name="level"
-          placeholder="Level"
-          value={form.level}
-          onChange={handleInputChange}
-          required
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          name="subject"
-          placeholder="Subject"
-          value={form.subject}
-          onChange={handleInputChange}
-          required
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          name="title"
-          placeholder="Title"
-          value={form.title}
-          onChange={handleInputChange}
-          required
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="file"
-          name="image"
-          onChange={handleInputChange}
-          className="w-full"
-        />
-        <input
-          type="file"
-          name="pdf"
-          onChange={handleInputChange}
-          className="w-full"
-        />
+      <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-5">
+        <div>
+          <label className="block mb-1 text-sm font-medium">Title</label>
+          <input
+            type="text"
+            placeholder="Enter title"
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 text-sm font-medium">Level</label>
+          <input
+            type="text"
+            placeholder="e.g., CET / NEET / Beginner"
+            value={formData.level}
+            onChange={(e) => setFormData({ ...formData, level: e.target.value })}
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 text-sm font-medium">Subject</label>
+          <input
+            type="text"
+            placeholder="Enter subject"
+            value={formData.subject}
+            onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 text-sm font-medium">Image File</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files[0])}
+            required
+            className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 file:mr-3 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-sm file:bg-blue-50 file:text-blue-700"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 text-sm font-medium">PDF File</label>
+          <input
+            type="file"
+            accept="application/pdf/image"
+            onChange={(e) => setPdf(e.target.files[0])}
+            required
+            className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 file:mr-3 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-sm file:bg-blue-50 file:text-blue-700"
+          />
+        </div>
+
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-200"
+          disabled={loading}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl transition duration-300"
         >
-          Add Topic
+          {loading ? 'Uploading...' : 'Create Topic'}
         </button>
-      </form>
 
-      <div className="max-w-3xl mx-auto">
-        <h3 className="text-xl font-semibold text-gray-700 mb-4">Topics</h3>
-        {topics.map((t) => (
-          <div
-            key={t._id}
-            className="bg-white rounded-lg shadow p-4 mb-4 border border-gray-200"
-          >
-            <div className="flex justify-between items-center mb-2">
-              <h4 className="text-lg font-bold">{t.title}</h4>
-              <button
-                onClick={() => handleDelete(t._id)}
-                className="text-red-600 hover:underline"
-              >
-                Delete
-              </button>
-            </div>
-            <p className="text-sm text-gray-600 mb-2">
-              {t.subject} / {t.level}
-            </p>
-            {t.imageUrl && (
-              <div className="mb-2">
-                <img
-                  src={`/api/admin/uploads/${t.imageUrl}`}
-                  alt="preview"
-                  className="w-32 rounded"
-                />
-              </div>
-            )}
-            {t.pdfUrl && (
-              <div>
-                <a
-                  href={`/api/admin/uploads/${t.pdfUrl}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  View PDF
-                </a>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+        {message && (
+          <p className="mt-4 text-center text-sm font-medium text-red-600">{message}</p>
+        )}
+      </form>
     </div>
   );
-}
+};
 
 export default AdminDashboard;
