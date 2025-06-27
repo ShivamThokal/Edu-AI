@@ -6,7 +6,8 @@ const topicSchema = new mongoose.Schema({
   subject: { type: String, required: true },
   title: { type: String, required: true },
   imageUrl: String,
-  pdfUrl: String
+  pdfUrl: String,
+  createdAt: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model("Topic", topicSchema);
