@@ -1,6 +1,6 @@
 # 🔐 FRONTEND: Firebase Config
 
-### /client/.env
+### /client/src/.env
 - REACT_APP_FIREBASE_API_KEY=your_firebase_api_key
 - REACT_APP_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
 - REACT_APP_FIREBASE_PROJECT_ID=your_project_id
