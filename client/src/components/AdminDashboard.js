@@ -22,15 +22,17 @@ const AdminDashboard = () => {
       return;
     }
 
-    const storageRef = ref(storage, `uploads/${Date.now()}`);
+    setLoading(true);
+
+    const storageRef = ref(storage, `uploads/${Date.now()}-_-${image.name}`);
     await uploadBytes(storageRef, image);
     const downloadURL = await getDownloadURL(storageRef);
     setImage(downloadURL);
-    const storageRef2 = ref(storage, `uploads/${Date.now()}`);
+    const storageRef2 = ref(storage, `uploads/${Date.now()}-_-${pdf.name}`);
     await uploadBytes(storageRef2, pdf);
     const downloadURL2 = await getDownloadURL(storageRef2);
     setPdf(downloadURL2);
-    alert("File uploaded!");
+    // alert("File uploaded!");
 
     const form = new FormData();
     form.append('title', formData.title);
@@ -42,7 +44,7 @@ const AdminDashboard = () => {
     // form.append('pdf', pdf);
 
     try {
-      setLoading(true);
+      
       const response = await fetch('http://localhost:5000/api/admin/addTopic', {
         method: 'POST',
         body: form

@@ -64,7 +64,7 @@ function StudentDashboard() {
                     rel="noopener noreferrer"
                     className="inline-block mt-2 text-blue-600 font-medium hover:underline"
                   >
-                    📄 View PDF
+                    📄 View PDF: {topic.pdfUrl.split("-_-")[1]?.split("?")[0]}
                   </a>
                 )}
               </div>
