@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import './App.css';
+import "./App.css";
+
+// import { initializeApp } from "firebase/app";
+// import firebaseConfig from "./firebaseConfig";
 
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -10,6 +13,9 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const [showRegister, setShowRegister] = useState(false);
   const role = localStorage.getItem("role");
+
+  // Initialize Firebase
+  // const app = initializeApp(firebaseConfig);
 
   const handleLogin = (userRole) => {
     localStorage.setItem("role", userRole);
@@ -31,11 +37,13 @@ function App() {
           {showRegister ? (
             <>
               <Register onRegisterSuccess={handleRegisterSuccess} />
-            
             </>
           ) : (
             <>
-              <Login onLogin={handleLogin} toggleForm={() => setShowRegister(true)} />
+              <Login
+                onLogin={handleLogin}
+                toggleForm={() => setShowRegister(true)}
+              />
               {/* Optional: Add text below login if needed */}
             </>
           )}

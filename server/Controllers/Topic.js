@@ -6,37 +6,45 @@ require('dotenv').config();
 const createTopic = async (req, res) => {
     try {
         console.log("Entered in createTopic")
-        const { level, title , subject}  = req.body
+        const { level, title , subject, imageUrl, pdfUrl}  = req.body
 
          //validation
-    if(!level || !title || !subject){
+    if(!level || !title || !subject ){
         return res.status(400).json({
             message:"All fields are required!",
     
         })
     }
 
-    const image = req.files.image;
-    const pdf = req.files.pdf;
-
-    if(!image || !pdf){
+    if(!imageUrl || !pdfUrl){
         return res.status(400).json({
-            message:"Files are missing",
-            
-        })
+            message:"Image and PDF URLs are required!",
+        })  
     }
 
+    // const image = req.files.image;
+    // const pdf = req.files.pdf;
+
+    // if(!image || !pdf){
+    //     return res.status(400).json({
+    //         message:"Files are missing",
+            
+    //     })
+    // }
+
     //upload files to cloudinary
-    const uploadImage = await uploadFileToCloudinary(image, process.env.FOLDER_NAME);
-    const uploadPdf = await uploadFileToCloudinary(pdf, process.env.FOLDER_NAME);
+    // const uploadImage = await uploadFileToCloudinary(image, process.env.FOLDER_NAME);
+    // const uploadPdf = await uploadFileToCloudinary(pdf, process.env.FOLDER_NAME);
 
     //create entry in the DB
     const topic = await Topic.create({
         level,
         subject,
         title,
-        imageUrl:uploadImage.secure_url,
-        pdfUrl: uploadPdf.secure_url
+        imageUrl: imageUrl,
+        pdfUrl: pdfUrl
+        // imageUrl:uploadImage.secure_url,
+        // pdfUrl: uploadPdf.secure_url
     })
 
     console.log("Topic created");

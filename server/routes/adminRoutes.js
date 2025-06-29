@@ -17,6 +17,7 @@ router.post("/addTopic", createTopic);
 // READ Topics
 router.get("/topics", async (req, res) => {
   const topics = await Topic.find();
+  // console.log("Fetched topics:", topics);
   res.json(topics);
 });
 

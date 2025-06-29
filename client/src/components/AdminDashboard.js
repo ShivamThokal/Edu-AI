@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import LogoutButton from './LogoutButton'
+import LogoutButton from './LogoutButton';
+import { storage } from '../firebaseConfig'; 
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const AdminDashboard = () => {
   const [formData, setFormData] = useState({
@@ -20,12 +22,24 @@ const AdminDashboard = () => {
       return;
     }
 
+    const storageRef = ref(storage, `uploads/${Date.now()}`);
+    await uploadBytes(storageRef, image);
+    const downloadURL = await getDownloadURL(storageRef);
+    setImage(downloadURL);
+    const storageRef2 = ref(storage, `uploads/${Date.now()}`);
+    await uploadBytes(storageRef2, pdf);
+    const downloadURL2 = await getDownloadURL(storageRef2);
+    setPdf(downloadURL2);
+    alert("File uploaded!");
+
     const form = new FormData();
     form.append('title', formData.title);
     form.append('level', formData.level);
     form.append('subject', formData.subject);
-    form.append('image', image);
-    form.append('pdf', pdf);
+    form.append('imageUrl', downloadURL);
+    form.append('pdfUrl', downloadURL2);
+    // form.append('image', image);
+    // form.append('pdf', pdf);
 
     try {
       setLoading(true);

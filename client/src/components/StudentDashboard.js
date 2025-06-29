@@ -49,7 +49,8 @@ function StudentDashboard() {
 
                 {topic.imageUrl && (
                   <img
-                    src={`/api/admin/uploads/${topic.imageUrl}`}
+                    // src={`/api/admin/uploads/${topic.imageUrl}`}
+                    src={topic.imageUrl}
                     alt={topic.title}
                     className="w-40 rounded shadow mb-2"
                   />
@@ -57,7 +58,8 @@ function StudentDashboard() {
 
                 {topic.pdfUrl && (
                   <a
-                    href={`/api/admin/uploads/${topic.pdfUrl}`}
+                    // href={`/api/admin/uploads/${topic.pdfUrl}`}
+                     href={topic.pdfUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-block mt-2 text-blue-600 font-medium hover:underline"

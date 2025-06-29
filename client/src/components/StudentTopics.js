@@ -1,3 +1,4 @@
+// this file is not used
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -6,7 +7,9 @@ const StudentTopics = () => {
 
   const fetchTopics = async () => {
     const res = await axios.get("http://localhost:5000/api/admin/topics");
+    
     setTopics(res.data);
+    // console.log("Fetched topics:", res.data);
   };
 
   useEffect(() => {
@@ -31,7 +34,8 @@ const StudentTopics = () => {
 
               {t.imageUrl && (
                 <img
-                  src={`http://localhost:5000/api/admin/uploads/${t.imageUrl}`}
+                  src={t.imageUrl}
+                  // src={`http://localhost:5000/api/admin/uploads/${t.imageUrl}`}
                   alt="topic"
                   className="w-40 rounded-md mb-4 border"
                 />
@@ -40,7 +44,8 @@ const StudentTopics = () => {
               {t.pdfUrl && (
                 <div className="mt-4">
                   <embed
-                    src={`http://localhost:5000/api/admin/uploads/${t.pdfUrl}`}
+                    // src={`http://localhost:5000/api/admin/uploads/${t.pdfUrl}`}
+                    src={t.pdfUrl}
                     type="application/pdf"
                     className="w-full h-[400px] rounded border"
                   />
