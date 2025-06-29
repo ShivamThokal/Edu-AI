@@ -24,11 +24,11 @@ const AdminDashboard = () => {
 
     setLoading(true);
 
-    const storageRef = ref(storage, `uploads/${Date.now()}-_-${image.name}`);
+    const storageRef = ref(storage, `uploads/${Date.now()}-_-${image.name.replace(/\s/g, '-')}`);
     await uploadBytes(storageRef, image);
     const downloadURL = await getDownloadURL(storageRef);
     setImage(downloadURL);
-    const storageRef2 = ref(storage, `uploads/${Date.now()}-_-${pdf.name}`);
+    const storageRef2 = ref(storage, `uploads/${Date.now()}-_-${pdf.name.replace(/\s/g, '-')}`);
     await uploadBytes(storageRef2, pdf);
     const downloadURL2 = await getDownloadURL(storageRef2);
     setPdf(downloadURL2);
