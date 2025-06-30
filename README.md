@@ -1,3 +1,10 @@
+# Project Setup
+cd client  and cd server
+npm install
+
+- Add the .env files
+ ---
+
 # 🔐 FRONTEND: Firebase Config
 
 ### /client/src/.env
@@ -23,3 +30,10 @@ CLOUD_NAME=your_cloudinary_cloud_name
 API_KEY=your_cloudinary_api_key
 API_SECRET=your_cloudinary_api_secret
 FOLDER_NAME=your_optional_cloudinary_folder_name
+
+
+---
+
+# To run the project
+cd client -> npm start
+cd server -> npm start
