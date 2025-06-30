@@ -1,5 +1,6 @@
 # Project Setup
-cd client  and cd server
+
+cd client  and cd server  
 npm install
 
 - Add the .env files
@@ -35,5 +36,5 @@ FOLDER_NAME=your_optional_cloudinary_folder_name
 ---
 
 # To run the project
-cd client -> npm start
+cd client -> npm start  
 cd server -> npm start
